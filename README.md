@@ -76,6 +76,40 @@ const discordTrack = encoder.createDiscordYouTubeTrack(
 console.log('Requester:', encoder.getRequester(discordTrack));
 ```
 
+### Decoding Tracks
+
+```typescript
+import { LavalinkEncoder } from 'ryxu-xo-lavalink-encoder';
+
+const encoder = new LavalinkEncoder();
+
+// Create and encode a track
+const track = encoder.createYouTubeTrack(
+  'dQw4w9WgXcQ',
+  'Never Gonna Give You Up',
+  'Rick Astley',
+  212
+);
+
+// Decode the track back to track info
+const decodedTrack = encoder.decodeTrack(track.track);
+console.log('Decoded track:', decodedTrack);
+
+// Batch decode multiple tracks
+import { decodeMultipleTracks, validateDecodedTrack } from 'ryxu-xo-lavalink-encoder/utils';
+
+const encodedTracks = [track.track, anotherTrack.track];
+const results = decodeMultipleTracks(encodedTracks, encoder.decodeTrack.bind(encoder));
+
+results.forEach((result, index) => {
+  if (result.success) {
+    console.log(`Track ${index + 1}:`, result.track);
+  } else {
+    console.log(`Track ${index + 1} failed:`, result.error);
+  }
+});
+```
+
 ## API Reference
 
 ### LavalinkEncoder
@@ -90,8 +124,8 @@ new LavalinkEncoder(options?: EncoderOptions & PlaylistEncoderOptions)
 
 #### Track Methods
 
-- `encodeTrack(trackInfo: TrackInfo): LavalinkTrack`
-- `decodeTrack(encodedTrack: string): TrackInfo`
+- `encodeTrack(trackInfo: TrackInfo): LavalinkTrack` - Encode track info to Lavalink format
+- `decodeTrack(encodedTrack: string): TrackInfo` - Decode Lavalink track string back to track info
 - `createTrack(identifier, title, author, length, uri, additionalInfo?): LavalinkTrack`
 - `createYouTubeTrack(videoId, title, author, duration, additionalInfo?): LavalinkTrack`
 - `createSpotifyTrack(trackId, title, author, duration, additionalInfo?): LavalinkTrack`
@@ -155,7 +189,16 @@ import {
   createPlaylistSummary,
   validateTrackInfo,
   sanitizeTrackTitle,
-  sanitizeAuthorName
+  sanitizeAuthorName,
+  // Decoding utilities
+  decodeMultipleTracks,
+  validateDecodedTrack,
+  extractTrackMetadata,
+  compareTracks,
+  findTracksByCriteria,
+  groupTracksBySource,
+  groupTracksByAuthor,
+  createTrackCollectionSummary
 } from 'ryxu-xo-lavalink-encoder/utils';
 ```
 
@@ -258,6 +301,50 @@ console.log(formatDuration(totalDuration));
 
 // Create track summary
 console.log(createTrackSummary(track)); // "Never Gonna Give You Up by Rick Astley (3:32)"
+```
+
+### Decoding and Analysis
+
+```typescript
+import { 
+  decodeMultipleTracks, 
+  validateDecodedTrack, 
+  extractTrackMetadata,
+  findTracksByCriteria,
+  groupTracksBySource,
+  createTrackCollectionSummary 
+} from 'ryxu-xo-lavalink-encoder/utils';
+
+// Decode and validate tracks
+const encodedTracks = [track1.track, track2.track, track3.track];
+const decodedResults = decodeMultipleTracks(encodedTracks, encoder.decodeTrack.bind(encoder));
+
+// Validate each decoded track
+decodedResults.forEach((result, index) => {
+  if (result.success) {
+    const validation = validateDecodedTrack(result.track);
+    if (validation.valid) {
+      console.log(`Track ${index + 1} is valid:`, extractTrackMetadata(result.track));
+    } else {
+      console.log(`Track ${index + 1} validation failed:`, validation.errors);
+    }
+  }
+});
+
+// Find tracks by criteria
+const allDecodedTracks = decodedResults
+  .filter(r => r.success)
+  .map(r => r.track);
+
+const youtubeTracks = findTracksByCriteria(allDecodedTracks, { source: 'youtube' });
+const longTracks = findTracksByCriteria(allDecodedTracks, { minDuration: 300000 }); // 5+ minutes
+
+// Group and analyze tracks
+const tracksBySource = groupTracksBySource(allDecodedTracks);
+const collectionSummary = createTrackCollectionSummary(allDecodedTracks);
+
+console.log('Tracks by source:', tracksBySource);
+console.log('Collection summary:', collectionSummary);
 ```
 
 ## Configuration
