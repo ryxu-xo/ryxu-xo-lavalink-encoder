@@ -396,13 +396,3 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## Support
 
 If you encounter any issues or have questions, please open an issue on the GitHub repository.
-
-## Changelog
-
-### 1.0.0
-- Initial release
-- Core track and playlist encoding
-- Discord bot integration
-- Multiple source support (YouTube, Spotify, SoundCloud)
-- Comprehensive utility functions
-- Full TypeScript support
