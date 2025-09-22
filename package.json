@@ -1,0 +1,56 @@
+{
+  "name": "ryxu-xo-lavalink-encoder",
+  "version": "1.0.0",
+  "description": "A comprehensive track and playlist encoder for Lavalink clients with Discord music bot support",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "prepublishOnly": "npm run build",
+    "test": "jest",
+    "lint": "eslint src/**/*.ts",
+    "format": "prettier --write src/**/*.ts"
+  },
+  "keywords": [
+    "lavalink",
+    "discord",
+    "music",
+    "bot",
+    "encoder",
+    "track",
+    "playlist",
+    "audio",
+    "metadata"
+  ],
+  "author": "Eiko",
+  "license": "MIT",
+  "files": [
+    "dist/**/*",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.0.0",
+    "jest": "^29.0.0",
+    "prettier": "^3.0.0",
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "base64-js": "^1.5.1"
+  },
+  "peerDependencies": {
+    "discord.js": "^14.0.0 || ^13.0.0"
+  },
+  "peerDependenciesMeta": {
+    "discord.js": {
+      "optional": true
+    }
+  }
+}
